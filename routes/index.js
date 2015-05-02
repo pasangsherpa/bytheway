@@ -8,18 +8,6 @@ var S3 = new AWS.S3();
 var gm = require('gm');
 var mime = require('mime');
 
-var client = s3.createClient({
-    maxAsyncS3: 20, // this is the default 
-    s3RetryCount: 3, // this is the default 
-    s3RetryDelay: 1000, // this is the default 
-    multipartUploadThreshold: 20971520, // this is the default (20 MB) 
-    multipartUploadSize: 15728640, // this is the default (15 MB) 
-    s3Options: {
-        accessKeyId: process.env.ACCESSKEYID,
-        secretAccessKey: process.env.SECRETACCESSKEY
-    },
-});
-
 router.get('/s3upload', function(req, res, next) {
     uploadFile.sendToS3();
     res.json("Upload success?");
@@ -49,10 +37,8 @@ router.post('/image', function(req, res) {
                 ACL: 'public-read',
                 ContentType: mime.lookup(imageName)
             };
-            client.putObject(data, function(err, res) {
+            S3.client.putObject(data, function(err, res) {
                 console.log('imageName: ' + imageName);
-
-
                 res.status(200).send('OK');
             });
         });
