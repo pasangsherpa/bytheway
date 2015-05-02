@@ -44,7 +44,7 @@ router.post('/image', function(req, res) {
                     Body: buf,
                     ContentType: mime.lookup(imageName)
                 };
-                S3.putObject(data, function(err, res) {
+                S3.putObject(data, function(err, response) {
                     if (err) console.log(err);
                     console.log('imageName: ' + imageName);
                     res.status(200).send('OK');
