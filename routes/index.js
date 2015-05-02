@@ -8,7 +8,7 @@ var fs = require('fs');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.status(200).send('By the way you can text us an image @ 920-THE-WAY0');
+    res.render('index');
 });
 
 router.post('/image', function(req, res) {
@@ -16,7 +16,7 @@ router.post('/image', function(req, res) {
   // if (twilio.validateExpressRequest(req, config.authToken)) {
 
     console.log(req.body)
-    res.status(200).send('OK');
+    res.send('OK');
 
   // } else {
   //   return res.send('Nice try imposter.');
