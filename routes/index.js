@@ -29,7 +29,7 @@ router.post('/image', function(req, res) {
     var image = req.body;
     console.log(req.body);
 
-    var imageName = image.From + '/' + image.SmsMessageSid + '.jpg';
+    var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
 
     gm(request(image.MediaUrl0), imageName)
         .resize(null, 500)
@@ -52,9 +52,9 @@ router.post('/image', function(req, res) {
                 S3.putObject(data, function(err, response) {
                     if (err) console.log(err);
                     console.log('imageName: ' + imageName);
-                    console.log('response: ' + response);
+                    console.log('response: ' + JSON.stringify(response));
                     db.insertImage({
-                        image: imageName,
+                        image: 'https://s3.amazonaws.com/disruptny/' + imageName,
                         phoneNumber: image.From
                     });
 
