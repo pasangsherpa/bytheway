@@ -26,11 +26,15 @@ router.post('/image', function(req, res) {
     // Validate Twilio req
     if (twilio.validateExpressRequest(req, process.env.TWILIO_TOKEN)) {
         var image = req.body;
-        var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
-
         if (!image.MediaUrl0) {
             return res.send('No image found.');
         }
+
+        var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
+        var tags = image.Body ? image.Body.split(' ') : ['notag'];
+        console.log(image);
+        console.log('tags: ' + tags);
+
         gm(request(image.MediaUrl0), imageName)
             .resize(null, 500)
             .compress('Lossless')
@@ -54,7 +58,7 @@ router.post('/image', function(req, res) {
                         db.insertImage({
                             image: 'https://s3.amazonaws.com/disruptny/' + imageName,
                             phoneNumber: image.From,
-                            tags: image.Body ? image.Body.split(' ') : ['notag']
+                            tags: tags
                         });
                         res.status(200).send('OK');
                     });
