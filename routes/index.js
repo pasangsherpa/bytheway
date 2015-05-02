@@ -27,8 +27,6 @@ router.post('/image', function(req, res) {
     // if (twilio.validateExpressRequest(req, config.authToken)) {
 
     var image = req.body;
-    console.log(req.body);
-
     var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
 
     gm(request(image.MediaUrl0), imageName)
@@ -51,13 +49,10 @@ router.post('/image', function(req, res) {
                 };
                 S3.putObject(data, function(err, response) {
                     if (err) console.log(err);
-                    console.log('imageName: ' + imageName);
-                    console.log('response: ' + JSON.stringify(response));
                     db.insertImage({
                         image: 'https://s3.amazonaws.com/disruptny/' + imageName,
                         phoneNumber: image.From
                     });
-
                     res.status(200).send('OK');
                 });
             });
