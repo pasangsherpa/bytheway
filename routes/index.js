@@ -10,6 +10,7 @@ var gm = require('gm').subClass({
     imageMagick: true
 });
 var mime = require('mime');
+var db = require('../mongodb');
 
 router.get('/s3upload', function(req, res, next) {
     uploadFile.sendToS3();
@@ -51,6 +52,12 @@ router.post('/image', function(req, res) {
                 S3.putObject(data, function(err, response) {
                     if (err) console.log(err);
                     console.log('imageName: ' + imageName);
+                    console.log('response: ' + response);
+                    db.insertImage({
+                        image: imageName,
+                        phoneNumber: image.From
+                    });
+
                     res.status(200).send('OK');
                 });
             });

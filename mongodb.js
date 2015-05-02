@@ -2,7 +2,7 @@
 var mongodb = require('mongodb');
 
 //We need to work with "MongoClient" interface in order to connect to a mongodb server.
-function insertImage(options){
+exports.insertImage = function insertImage(options){
   var MongoClient = mongodb.MongoClient;
   // Connection URL. This is where your mongodb server is running.
   var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
@@ -18,8 +18,7 @@ function insertImage(options){
       // do some work here with the database.
       var collection = db.collection('images');
       var image = {
-        smallImage: options.smallImage,
-        originalImage: options.originalImage,
+        image: options.image,
         phoneNumber: options.phoneNumber
       };
 
@@ -36,9 +35,8 @@ function insertImage(options){
 
 };
 
-// DEMO CODE
-insertImage({
-  smallImage: 'http://lorempixel.com/100/400/cats/',
-  originalImage: 'http://lorempixel.com/100/400/cats/',
-  phoneNumber: '555555test'
-})
+// // DEMO CODE
+// insertImage({
+//   image: 'http://lorempixel.com/100/400/cats/',
+//   phoneNumber: '555555test'
+// })
