@@ -26,22 +26,31 @@ router.post('/image', function(req, res) {
     // if (twilio.validateExpressRequest(req, config.authToken)) {
 
     var image = req.body;
+    // var image = {
+    //     "SmsMessageSid": "aksjhdflkjhasdf",
+    //     "From": "+12062526252",
+    //     "MediaUrl0": "http://www.vetprofessionals.com/catprofessional/images/home-cat.jpg"
+    // }
     console.log(req.body);
 
     var imageName = image.From + '/' + image.SmsMessageSid + '.jpg';
 
+    // request(image.MediaUrl0).pipe(res);
+
     gm(request(image.MediaUrl0), imageName)
-        .resize('100^', '100^')
+        .resize(400, 400)
         .stream(function(err, stdout, stderr) {
+            if (err) console.log(err);
             var buf = new Buffer('');
             stdout.on('data', function(data) {
                 buf = Buffer.concat([buf, data]);
             });
-            stdout.on('end', function(data) {
+            stdout.on('end', function() {
                 var data = {
                     Bucket: 'disruptny',
                     Key: imageName,
                     Body: buf,
+                    ACL: 'public-read',
                     ContentType: mime.lookup(imageName)
                 };
                 S3.putObject(data, function(err, response) {
