@@ -26,19 +26,13 @@ router.post('/image', function(req, res) {
     // if (twilio.validateExpressRequest(req, config.authToken)) {
 
     var image = req.body;
-    // var image = {
-    //     "SmsMessageSid": "aksjhdflkjhasdf",
-    //     "From": "+12062526252",
-    //     "MediaUrl0": "http://www.vetprofessionals.com/catprofessional/images/home-cat.jpg"
-    // }
     console.log(req.body);
 
     var imageName = image.From + '/' + image.SmsMessageSid + '.jpg';
 
-    // request(image.MediaUrl0).pipe(res);
-
     gm(request(image.MediaUrl0), imageName)
-        .resize(400, 400)
+        .compress('JPEG')
+        .noProfile()
         .stream(function(err, stdout, stderr) {
             if (err) console.log(err);
             var buf = new Buffer('');
