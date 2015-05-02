@@ -28,6 +28,9 @@ router.post('/image', function(req, res) {
         var image = req.body;
         var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
 
+        if (!image.MediaUrl0) {
+            return res.send('No image found.');
+        }
         gm(request(image.MediaUrl0), imageName)
             .resize(null, 500)
             .compress('Lossless')
