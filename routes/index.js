@@ -32,8 +32,7 @@ router.post('/image', function(req, res) {
 
     gm(request(image.MediaUrl0), imageName)
         .resize(null, 500)
-        .quality(60)
-        .compress('JPEG')
+        .compress('Lossless')
         .noProfile()
         .stream(function(err, stdout, stderr) {
             if (err) console.log(err);
