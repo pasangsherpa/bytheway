@@ -31,17 +31,21 @@ router.post('/image', function(req, res) {
     var imageName = image.From + '/' + image.SmsMessageSid + '.jpg';
 
     gm(request(image.MediaUrl0), imageName)
-        .resize('100^', '100^')
+        .resize(null, 500)
+        .compress('Lossless')
+        .noProfile()
         .stream(function(err, stdout, stderr) {
+            if (err) console.log(err);
             var buf = new Buffer('');
             stdout.on('data', function(data) {
                 buf = Buffer.concat([buf, data]);
             });
-            stdout.on('end', function(data) {
+            stdout.on('end', function() {
                 var data = {
                     Bucket: 'disruptny',
                     Key: imageName,
                     Body: buf,
+                    ACL: 'public-read',
                     ContentType: mime.lookup(imageName)
                 };
                 S3.putObject(data, function(err, response) {
