@@ -50,7 +50,8 @@ router.post('/image', function(req, res) {
                         if (err) console.log(err);
                         db.insertImage({
                             image: 'https://s3.amazonaws.com/disruptny/' + imageName,
-                            phoneNumber: image.From
+                            phoneNumber: image.From,
+                            tags: image.Body ? image.Body.split(' ') : ['notag']
                         });
                         res.status(200).send('OK');
                     });
