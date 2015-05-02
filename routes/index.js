@@ -31,8 +31,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/image', function(req, res) {
-// Validate Twilio req
-// if (twilio.validateExpressRequest(req, config.authToken)) {
+    // Validate Twilio req
+    // if (twilio.validateExpressRequest(req, config.authToken)) {
 
     var image = req.body;
     console.log(req.body);
@@ -56,11 +56,10 @@ router.post('/image', function(req, res) {
                 res.status(200).send('OK');
             });
         });
-    });
 
-// } else {
-//   return res.send('Nice try imposter.');
-// }
+    // } else {
+    //   return res.send('Nice try imposter.');
+    // }
 });
 
 module.exports = router;
