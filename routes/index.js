@@ -31,6 +31,8 @@ router.post('/image', function(req, res) {
     var imageName = image.From + '/' + image.SmsMessageSid + '.jpg';
 
     gm(request(image.MediaUrl0), imageName)
+        .resize(null, 500)
+        .quality(60)
         .compress('JPEG')
         .noProfile()
         .stream(function(err, stdout, stderr) {
