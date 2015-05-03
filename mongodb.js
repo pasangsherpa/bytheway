@@ -109,7 +109,7 @@ exports.getTagsStats = function getTagsStats(cb) {
       console.log('Connection established to', url);
 
       // do some work here with the database.
-      var collection = db.collection('images');  
+      var collection = db.collection('images');
       collection.aggregate({
           "$unwind": "$tags"
       }, {
@@ -118,18 +118,18 @@ exports.getTagsStats = function getTagsStats(cb) {
               "count": {
                   "$sum": 1
               }
-          }, {
-              "$sort": {
-                  "count": -1
-              }
+          }
+      }, {
+          "$sort": {
+              "count": -1
           }
       }, function(err, result) {
-        if (err) {
-          cb(err);
-        } else {
-          cb(null, result);
-        }
-        db.close();
+          if (err) {
+              cb(err);
+          } else {
+              cb(null, result);
+          }
+          db.close();
       });
     }
   });
