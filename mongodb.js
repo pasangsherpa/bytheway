@@ -94,23 +94,15 @@ exports.getStats = function getStats(cb) {
               "totalMale": {
                   "$sum": {
                     "$cond": [{
-                            "$eq": [
-                                "$faces.gender",
-                                "male"
-                            ]}, 1, 0
-                        ]}
-                    ]
+                        "$eq": ["$faces.gender", "male"]
+                    }, 1, 0]
                   }                
               },
               "totalFemale": {
                   "$sum": {
                     "$cond": [{
-                            "$eq": [
-                                "$faces.gender",
-                                "female"
-                            ]}, 1, 0
-                        ]}
-                    ]
+                        "$eq": ["$faces.gender", "female"]
+                    }, 1, 0]
                   }                
               }
           }
