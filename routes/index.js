@@ -1,21 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var uploadFile = require('../uploadFile.js');
 var request = require('request');
-var AWS = require('aws-sdk');
+var async = require('async');
+var _ = require('lodash');
+
 var twilio = require('twilio');
 var AWS = require('aws-sdk');
 var S3 = new AWS.S3();
+var mime = require('mime');
 var gm = require('gm').subClass({
     imageMagick: true
 });
-var mime = require('mime');
+
 var db = require('../mongodb');
 
-router.get('/s3upload', function(req, res, next) {
-    uploadFile.sendToS3();
-    res.json("Upload success?");
-});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -46,35 +44,71 @@ router.post('/image', function(req, res) {
         console.log(image);
         console.log('tags: ' + tags);
 
-        gm(request(image.MediaUrl0), imageName)
-            .resize(null, 500)
-            .compress('Lossless')
-            .noProfile()
-            .stream(function(err, stdout, stderr) {
-                if (err) console.log(err);
-                var buf = new Buffer('');
-                stdout.on('data', function(data) {
-                    buf = Buffer.concat([buf, data]);
+        imageDetails = {
+            image: 'https://s3.amazonaws.com/disruptny/' + imageName,
+            phoneNumber: image.From,
+            tags: tags
+        }
+
+        async.auto({
+            getFaceDetails: function(callback){
+                request.post({
+                    url: 'https://api.projectoxford.ai/face/v0/detections',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    qs: {
+                        'subscription-key': '44d703f1afe14f50a585192fbba52357',
+                        analyzesFaceLandmarks: false,
+                        analyzesAge: true,
+                        analyzesGender: true
+                    },
+                    body: '{"url":"' + imageDetails.image + '"}'        
+                }, function(err, response, body) {
+                    if (err) return callback(err);
+                    else {
+                        callback(null, body);
+                    }
                 });
-                stdout.on('end', function() {
-                    var data = {
-                        Bucket: 'disruptny',
-                        Key: imageName,
-                        Body: buf,
-                        ACL: 'public-read',
-                        ContentType: mime.lookup(imageName)
-                    };
-                    S3.putObject(data, function(err, response) {
+            },
+            saveToS3: function(callback){
+                gm(request(image.MediaUrl0), imageName)
+                    .resize(null, 500)
+                    .compress('Lossless')
+                    .noProfile()
+                    .stream(function(err, stdout, stderr) {
                         if (err) console.log(err);
-                        db.insertImage({
-                            image: 'https://s3.amazonaws.com/disruptny/' + imageName,
-                            phoneNumber: image.From,
-                            tags: tags
+                        var buf = new Buffer('');
+                        stdout.on('data', function(data) {
+                            buf = Buffer.concat([buf, data]);
                         });
-                        res.status(200).send('OK');
+                        stdout.on('end', function() {
+                            var data = {
+                                Bucket: 'disruptny',
+                                Key: imageName,
+                                Body: buf,
+                                ACL: 'public-read',
+                                ContentType: mime.lookup(imageName)
+                            };
+                            S3.putObject(data, function(err, response) {
+                                if (err) return callback(err);
+                                else callback(null);
+                            });
+                        });
                     });
-                });
-            });
+            },
+            saveToMongo: ['getFaceDetails', 'saveToS3', function(callback, results){
+                var faceDetails = results.getFaceDetails;
+                if (faceDetails) {
+                    imageDetails.faces = _.pluck(JSON.parse(faceDetails), 'attributes');
+                }
+                db.insertImage(imageDetails);
+                callback(null);
+            }]
+        }, function(err, results) {
+            res.send();
+        });
+
     } else {
         return res.send('Nice try imposter.');
     }
