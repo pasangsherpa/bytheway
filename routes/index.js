@@ -16,23 +16,29 @@ var db = require('../mongodb');
 
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
- 
+var CLIENTS = [];
+
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({port: 3030});
 wss.on('connection', function(ws) {
+    CLIENTS.push(ws);
     console.log('connection established with client');
-  eventEmitter.on('sendImage', sendImage);
-  function sendImage(imageObj) {
-    console.log('sendImage Event called. Sending', imageObj);
-    ws.send(imageObj.image);
-  }
-  console.log('started client interval');
-  ws.on('close', function() {
-    console.log('stopping client interval');
-    eventEmitter.removeListener('sendImage', sendImage)
-  });
+
+    ws.on('close', function() {
+    // eventEmitter.removeListener('sendImage', sendImage)
+    });
 });
+eventEmitter.on('sendImage', sendImageToWSClients);
+
+function sendImageToWSClients(imageObj) {
+    CLIENTS.forEach(function(ws) {
+        if (ws.readyState == WebSocket.OPEN) {
+            console.log('sendImage Event called. Sending', imageObj);
+            ws.send(imageObj.image);
+        }
+    });
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
