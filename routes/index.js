@@ -22,14 +22,15 @@ var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({port: 3030});
 wss.on('connection', function(ws) {
     console.log('connection established with client');
-  eventEmitter.on('sendImage', function(imageObj) {
+  eventEmitter.on('sendImage', sendImage);
+  function sendImage(imageObj) {
     console.log('sendImage Event called. Sending', imageObj);
     ws.send(imageObj.image);
- 
-  });
+  }
   console.log('started client interval');
   ws.on('close', function() {
     console.log('stopping client interval');
+    eventEmitter.removeListener('sendImage', sendImage)
   });
 });
 

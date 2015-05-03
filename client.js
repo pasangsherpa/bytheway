@@ -50,12 +50,29 @@ function setStats() {
   });
 }
 
+// Set Tags
+function setTags() {
+  $.getJSON("http://localhost:3000/tagstats")
+  .then(function(results) {
+    var firstTag = results[0];
+    var secondTag = results[1];
+    var thirdTag = results[2];
+    $('#firstTag').html('#' + firstTag._id);
+    $('#firstTagCount').html(firstTag.count);
+    $('#secondTag').html('#' + secondTag._id);
+    $('#secondTagCount').html(secondTag.count);
+    $('#thirdTag').html('#' + thirdTag._id);
+    $('#thirdTagCount').html(thirdTag.count);
+  });
+}
+
 $('#stats-button').click(function(evt) {
   evt.preventDefault();
   
   var buttonText = $('#stats-button').html();
   if (buttonText == "Show Stats") {
     setStats();
+    setTags();
     $('#stats-button').html("Hide Stats");
     $('#stats').fadeIn();
   } else {
@@ -71,6 +88,7 @@ $('#stats-button').click(function(evt) {
 
 function insertImage(url) {
   setStats();
+  setTags();
   var tmpImage = $("<img/>");
   tmpImage.load(function() {
     var naturalWidth = tmpImage[0].naturalWidth;
