@@ -4,8 +4,9 @@ ee.addListener('insertImage', insertImageListener);
 var $container = $("#photobanner");
 var imageQueue = [];
 
+pollTimer();
+// setTimeout(pollTimer, 5000);
 setTimeout(insertTimer, 5000);
-setTimeout(pollTimer, 5000);
 
 // TODO: Use real URL and schema
 function pollForImages() {
@@ -24,14 +25,18 @@ function pollTimer() {
 }
 
 function insertImage(url) {
-  var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="height:0px; border:1px solid black; width:375px"></paper-shadow>');
+  var tmpImage = $('<img/>');
+  tmpImage.load(function() {
+    var naturalWidth = tmpImage[0].naturalWidth;
+    var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="height:0px; border:1px solid black; width:'+naturalWidth+'px"></paper-shadow>');
+    $container.prepend($newImageContainer);
+    $newImageContainer.animate({height: "500px"}, 500, function() {
+      $newImageContainer.html(tmpImage);
+    });
+    
+  }).attr('src', url);
 
-  $container.prepend($newImageContainer);
-  $newImageContainer.animate({height: "500px"}, 500, function() {
-    var $newImage = $('<img src="'+url+'" style="display:none"/>');
-    $newImageContainer.html($newImage);
-    $newImage.fadeIn("fast");
-  });
+
 
 }
 
