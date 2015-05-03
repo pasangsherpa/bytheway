@@ -125,7 +125,7 @@ exports.getStats = function getStats(cb) {
                   "$min": "$faces.age"
               },
               "total": {
-                  "$sum": "$_id"
+                  "$sum": "$faces.gender"
               },
               "totalMale": {
                   "$sum": {
