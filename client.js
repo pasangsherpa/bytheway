@@ -10,7 +10,7 @@ setTimeout(insertTimer, 5000);
 
 // TODO: Use real URL and schema
 function pollForImages() {
-  $.getJSON('http://localhost:3000/images')
+  $.getJSON("http://localhost:3000/images")
   .then(function(results) {
     console.log(results);
     results.forEach(function(result) {
@@ -25,21 +25,17 @@ function pollTimer() {
 }
 
 function insertImage(url) {
-  var tmpImage = $('<img/>');
+  var tmpImage = $("<img/>");
   tmpImage.load(function() {
     var naturalWidth = tmpImage[0].naturalWidth;
-    var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="height:0px; border:1px solid black; width:'+naturalWidth+'px"></paper-shadow>');
+    var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="height:0px; border:1px solid black; width:' + naturalWidth + 'px"></paper-shadow>');
     $container.prepend($newImageContainer);
     $newImageContainer.animate({height: "500px"}, 500, function() {
       $newImageContainer.html(tmpImage);
     });
-    
-  }).attr('src', url);
 
-
-
+  }).attr("src", url);
 }
-
 
 function insertImageListener() {
   console.log('The insertImage event has been emitted.');
@@ -48,7 +44,8 @@ function insertImageListener() {
 }
 
 function insertTimer() {
-  if (isQueueEmpty()) {
+  renderedImages = $(".item");
+  if (isQueueEmpty() && renderedImages.length > 0) {
     var lastImageSrc = popLastPhoto();
     imageQueue.push(lastImageSrc);
     ee.emit('insertImage');
@@ -60,9 +57,7 @@ function insertTimer() {
   }
 }
 
-
-
-function isQueueEmpty() {return imageQueue.length === 0}
+function isQueueEmpty() {return imageQueue.length === 0; }
 
 function popLastPhoto() {
   var items = $(".item");
