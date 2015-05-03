@@ -44,17 +44,8 @@ function insertImage(url) {
 
 function insertImageListener() {
   console.log('The insertImage event has been emitted.');
-  updateStats();
   var next = imageQueue.pop();
   insertImage(next);
-}
-
-function updateStats() {
-  $.getJSON("http://localhost:3000/stats")
-  .then(function(results) {
-    //find by id and update numbers
-    console.log(results);
-  });
 }
 
 function insertTimer() {

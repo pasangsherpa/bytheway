@@ -14,6 +14,22 @@ var gm = require('gm').subClass({
 
 var db = require('../mongodb');
 
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+ 
+var WebSocket = require('ws');
+var WebSocketServer = WebSocket.Server;
+var wss = new WebSocketServer({port: 3030});
+wss.on('connection', function(ws) {
+  eventEmitter.on('sendImage', function(imageObj) {
+    ws.send(imageObj.image);
+ 
+  });
+  console.log('started client interval');
+  ws.on('close', function() {
+    console.log('stopping client interval');
+  });
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -117,6 +133,7 @@ router.post('/image', function(req, res) {
                     if (err) {
                         callback(err);
                     } else {
+                        eventEmitter.emit('sendImage', imageDetails);
                         callback(null, result);
                     }
                 });
