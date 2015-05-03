@@ -65,7 +65,7 @@ exports.getImages = function getImages(cb) {
   });
 }
 
-exports.getAverageAge = function getAverageAge(cb) {
+exports.getStats = function getStats(cb) {
   var MongoClient = mongodb.MongoClient;
   // Connection URL. This is where your mongodb server is running.
   var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
@@ -85,80 +85,33 @@ exports.getAverageAge = function getAverageAge(cb) {
       }, {
           "$group": {
               "_id": null,
-              "avg": {
-                  "$avg": "$faces.age"
-              }
-          }
-      }, function(err, result) {
-        if (err) {
-          cb(err);
-        } else {
-          cb(null, result);
-        }
-        db.close();
-      });
-    }
-  })
-}
-
-exports.getMaxAge = function getMaxAge(cb) {
-  var MongoClient = mongodb.MongoClient;
-  // Connection URL. This is where your mongodb server is running.
-  var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
-
-  // Use connect method to connect to the Server
-  MongoClient.connect(url, function (err, db) {
-    if (err) {
-      console.log('Unable to connect to the mongoDB server. Error:', err);
-    } else {
-      //HURRAY!! We are connected. :)
-      console.log('Connection established to', url);
-
-      // do some work here with the database.
-      var collection = db.collection('images');  
-      collection.aggregate({
-          "$unwind": "$faces"
-      }, {
-          "$group": {
-              "_id": null,
-              "max": {
+              "maximumAge": {
                   "$max": "$faces.age"
-              }
-          }
-      }, function(err, result) {
-        if (err) {
-          cb(err);
-        } else {
-          cb(null, result);
-        }
-        db.close();
-      });
-    }
-  })
-}
-
-exports.getMinAge = function getMinAge(cb) {
-  var MongoClient = mongodb.MongoClient;
-  // Connection URL. This is where your mongodb server is running.
-  var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
-
-  // Use connect method to connect to the Server
-  MongoClient.connect(url, function (err, db) {
-    if (err) {
-      console.log('Unable to connect to the mongoDB server. Error:', err);
-    } else {
-      //HURRAY!! We are connected. :)
-      console.log('Connection established to', url);
-
-      // do some work here with the database.
-      var collection = db.collection('images');  
-      collection.aggregate({
-          "$unwind": "$faces"
-      }, {
-          "$group": {
-              "_id": null,
-              "max": {
+              },
+              "minimumAge": {
                   "$min": "$faces.age"
+              },
+              "totalMale": {
+                  "$sum": {
+                    "$cond": [{
+                            "$eq": [
+                                "$faces.gender",
+                                "male"
+                            ]
+                        }
+                    ]
+                  }                
+              },
+              "totalFemale": {
+                  "$sum": {
+                    "$cond": [{
+                            "$eq": [
+                                "$faces.gender",
+                                "female"
+                            ]
+                        }
+                    ]
+                  }                
               }
           }
       }, function(err, result) {
@@ -172,5 +125,7 @@ exports.getMinAge = function getMinAge(cb) {
     }
   })
 }
+
+
 
 

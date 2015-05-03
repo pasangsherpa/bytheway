@@ -118,28 +118,8 @@ router.post('/image', function(req, res) {
     }
 });
 
-router.get('/averageAge', function(req, res) {
-    db.getAverageAge(function(err, result) {
-        if (err) {
-            res.send(err);
-        } else {
-            res.json(result);
-        }
-    });
-});
-
-router.get('/maxAge', function(req, res) {
-    db.getMaxAge(function(err, result) {
-        if (err) {
-            res.send(err);
-        } else {
-            res.json(result);
-        }
-    });
-});
-
-router.get('/minAge', function(req, res) {
-    db.getMinAge(function(err, result) {
+router.get('/stats', function(req, res) {
+    db.getStats(function(err, result) {
         if (err) {
             res.send(err);
         } else {
