@@ -24,7 +24,8 @@ function pollTimer() {
 }
 
 function insertImage(url) {
-  var $newImageContainer = $('<div class="item" style="height:0px; border:1px solid black; width:375px"></div>');
+  var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="height:0px; border:1px solid black; width:375px"></paper-shadow>');
+
   $container.prepend($newImageContainer);
   $newImageContainer.animate({height: "500px"}, 500, function() {
     var $newImage = $('<img src="'+url+'" style="display:none"/>');
