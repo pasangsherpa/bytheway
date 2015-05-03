@@ -21,14 +21,26 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/images', function(req, res) {
-    db.getImages(function(err, results) {
-        if (err) {
-            res.send(err);
-        } else {
-            res.json(results);
-        }
-    });
+    var tag = req.query.tag;
+    if (tag) {
+        db.getImagesWithTag(tag, function(err, results) {
+            if (err) {
+                res.send(err);
+            } else {
+                res.json(results);
+            }
+        });
+    } else {
+        db.getImages(function(err, results) {
+            if (err) {
+                res.send(err);
+            } else {
+                res.json(results);
+            }
+        });
+    }
 });
+
 
 /* Twilio incoming */
 router.post('/image', function(req, res) {
@@ -104,7 +116,6 @@ router.post('/image', function(req, res) {
                     if (err) {
                         callback(err);
                     } else {
-                        console.log(result);
                         callback(null, result);
                     }
                 });
