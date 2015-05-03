@@ -2,34 +2,31 @@ var ee = new EventEmitter();
 ee.addListener('insertImage', insertImageListener);
 
 var $container = $("#photobanner");
-var imageQueue = [
-  "http://lorempixel.com/344/233/cats/10/",
-  "http://lorempixel.com/344/233/cats/1/",
-  "http://lorempixel.com/344/233/cats/2/"
-];
+var imageQueue = [];
 
 setTimeout(insertTimer, 5000);
 setTimeout(pollTimer, 5000);
 
 // TODO: Use real URL and schema
 function pollForImages() {
-  $.getJSON('someURLhere')
+  $.getJSON('http://localhost:3000/images')
   .then(function(results) {
+    console.log(results);
     results.forEach(function(result) {
-      imageQueue.push(result.url);
+      imageQueue.push(result.image);
     });
   });
 }
 
 function pollTimer() {
   pollForImages();
-  setTimeout(pollTimer, 5000);
+  // setTimeout(pollTimer, 5000);
 }
 
 function insertImage(url) {
-  var $newImageContainer = $('<div class="item" style="height:0px; border:1px solid black; width:344px"></div>');
+  var $newImageContainer = $('<div class="item" style="height:0px; border:1px solid black; width:375px"></div>');
   $container.prepend($newImageContainer);
-  $newImageContainer.animate({height: "233px"}, 500, function() {
+  $newImageContainer.animate({height: "500px"}, 500, function() {
     var $newImage = $('<img src="'+url+'" style="display:none"/>');
     $newImageContainer.html($newImage);
     $newImage.fadeIn("fast");

@@ -22,6 +22,16 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
+router.get('/images', function(req, res) {
+    db.getImages(function(err, results) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
+
 /* Twilio incoming */
 router.post('/image', function(req, res) {
     // Validate Twilio req
