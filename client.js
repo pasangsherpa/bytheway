@@ -4,25 +4,30 @@ ee.addListener('insertImage', insertImageListener);
 var $container = $("#photobanner");
 var imageQueue = [];
 
-pollTimer();
+// Get initial image set
+// Start listening for images.
+// start timer to render images.
+
+
+firstImageLoad();
 // setTimeout(pollTimer, 5000);
 setTimeout(insertTimer, 5000);
 
 // TODO: Use real URL and schema
-function pollForImages() {
+function firstImageLoad() {
   $.getJSON("http://localhost:3000/images")
   .then(function(results) {
-    console.log(results);
     results.forEach(function(result) {
       imageQueue.push(result.image);
     });
+    ee.emit('insertImage');
   });
 }
 
-function pollTimer() {
-  pollForImages();
-  // setTimeout(pollTimer, 5000);
-}
+// function pollTimer() {
+//   pollForImages();
+//   // setTimeout(pollTimer, 5000);
+// }
 
 function insertImage(url) {
   var tmpImage = $("<img/>");
