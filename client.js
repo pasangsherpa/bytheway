@@ -2,15 +2,18 @@ var ee = new EventEmitter();
 ee.addListener('insertImage', insertImageListener);
 
 var $search = $('#search-button');
+var $tagresults = $('#tag-results');
 var $container = $("#photobanner");
 var imageQueue = [];
 
 $search.on('click', function() {
+  $tagresults.empty();
   var tags = $('#search-bar').val();
   $.getJSON("http://localhost:3000/images?tags=" + tags)
-  .then(function(results) {
-    debugger
-    console.log(results);
+  .done(function( data ) {
+    $.each( data.items, function( i, item ) {
+      $("<img>").attr( "src", item.image ).appendTo("#tag-results");
+    }
   });
 })
 
