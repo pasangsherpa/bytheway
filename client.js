@@ -13,7 +13,7 @@ $search.on('click', function() {
   .done(function( data ) {
     $.each( data.items, function( i, item ) {
       $("<img>").attr( "src", item.image ).appendTo("#tag-results");
-    }
+    });
   });
 })
 
