@@ -52,7 +52,7 @@ router.post('/image', function(req, res) {
         }
 
         var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
-        var tags = image.Body ? image.Body.split(' ') : ['notag'];
+        var tags = image.Body ? image.Body.toLowerCase().split(' ') : ['notag'];
 
         imageDetails = {
             image: 'https://s3.amazonaws.com/disruptny/' + imageName,
