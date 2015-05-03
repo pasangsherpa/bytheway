@@ -1,6 +1,6 @@
 
 #container {
-  width: 800px;
+  width: 50%;
   margin: 0 auto;
 }
 
@@ -14,6 +14,31 @@ h1 {
 }
 
 #stats-div {
-  margin: 10px;
+  width: 25%;
   float: right;
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+#stats {
+  display: none;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+body {
+  font-size: x-large !important;
+}
+
+.badge {
+  font-size: xx-large !important;
+}
+
+.progress {
+  height: 40px !important;
+}
+
+.progress-bar {
+  font-size: x-large !important;
+  padding-top: 10px !important;
 }
