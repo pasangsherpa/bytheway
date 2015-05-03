@@ -85,7 +85,7 @@ exports.getImagesWithTag = function getImages(tagsList, cb) {
                   tagsList
               ]
           }
-      }, function(err, results){
+      }).toArray(function(err, results){
         if (err) {
           cb(err);
         } else {

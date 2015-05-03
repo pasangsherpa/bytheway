@@ -22,9 +22,9 @@ router.get('/', function(req, res, next) {
 
 router.get('/images', function(req, res) {
     var tags = req.query.tags;
-    console.log(tags)
+    console.log('tags: ' + tags)
     if (tags) {
-        db.getImagesWithTag(tags.split(','), function(err, results) {
+        db.getImagesWithTag(tags.split(' '), function(err, results) {
             if (err) {
                 res.send(err);
             } else {
