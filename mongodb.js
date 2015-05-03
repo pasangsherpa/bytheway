@@ -81,7 +81,7 @@ exports.getImagesWithTag = function getImages(tagsList, cb) {
       var collection = db.collection('images');
       collection.find({
           tags: {
-              $all: [
+              $in: [
                   tagsList
               ]
           }
