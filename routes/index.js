@@ -58,7 +58,7 @@ router.post('/image', function(req, res) {
                         'content-type': 'application/json'
                     },
                     qs: {
-                        'subscription-key': '44d703f1afe14f50a585192fbba52357',
+                        'subscription-key': process.env.FACE_API_KEY,
                         analyzesFaceLandmarks: false,
                         analyzesAge: true,
                         analyzesGender: true
