@@ -19,7 +19,8 @@ exports.insertImage = function insertImage(options){
       var collection = db.collection('images');
       var image = {
         image: options.image,
-        phoneNumber: options.phoneNumber
+        phoneNumber: options.phoneNumber,
+        tags: options.tags
       };
 
       collection.insert(image, function(err, result){

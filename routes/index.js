@@ -22,6 +22,7 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
+/* Twilio incoming */
 router.post('/image', function(req, res) {
     // Validate Twilio req
     if (twilio.validateExpressRequest(req, process.env.TWILIO_TOKEN)) {
@@ -68,5 +69,11 @@ router.post('/image', function(req, res) {
         return res.send('Nice try imposter.');
     }
 });
+
+/* Get images */
+router.get('/image', function(req, res) {
+
+});
+
 
 module.exports = router;
