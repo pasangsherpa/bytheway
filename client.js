@@ -9,7 +9,7 @@ var imageQueue = [];
 $search.on('click', function() {
   $tagresults.empty();
   var tags = $('#search-bar').val();
-  $.getJSON("http://localhost:3000/images?tags=" + tags)
+  $.getJSON("http://209.208.110.166:3000/images?tags=" + tags)
   .done(function( data ) {
     $.each(data, function( i, item ) {
       $("<img>").addClass("tag-image").attr( "src", item.image ).appendTo("#tag-results");
@@ -36,7 +36,7 @@ setTimeout(insertTimer, 5000);
 
 // TODO: Use real URL and schema
 function firstImageLoad() {
-  $.getJSON("http://localhost:3000/images")
+  $.getJSON("http://209.208.110.166:3000/images")
   .then(function(results) {
     results.forEach(function(result) {
       imageQueue.push(result.image);
@@ -47,7 +47,7 @@ function firstImageLoad() {
 
 // Set Stats
 function setStats() {
-  $.getJSON("http://localhost:3000/stats")
+  $.getJSON("http://209.208.110.166:3000/stats")
   .then(function(results) {
     var stats = results[0];
     var total = stats.totalMale + stats.totalFemale;
@@ -66,7 +66,7 @@ function setStats() {
 
 // Set Tags
 function setTags() {
-  $.getJSON("http://localhost:3000/tagstats")
+  $.getJSON("http://209.208.110.166:3000/tagstats")
   .then(function(results) {
     var firstTag = results[0];
     var secondTag = results[1];
