@@ -2,7 +2,7 @@
 var mongodb = require('mongodb');
 
 //We need to work with "MongoClient" interface in order to connect to a mongodb server.
-exports.insertImage = function insertImage(image){
+exports.insertImage = function insertImage(image, cb){
   var MongoClient = mongodb.MongoClient;
   // Connection URL. This is where your mongodb server is running.
   var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
@@ -19,10 +19,9 @@ exports.insertImage = function insertImage(image){
       var collection = db.collection('images');
       collection.insert(image, function(err, result){
         if (err) {
-          console.log(err);
+          cb(err);
         } else {
-          console.log('Successfully inserted image');
-          // console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+          cb(null, result);
         }
         db.close();
       })      
@@ -65,3 +64,41 @@ exports.getImages = function getImages(cb) {
     }
   });
 }
+
+exports.getAverageAge = function getAverageAge(cb) {
+  var MongoClient = mongodb.MongoClient;
+  // Connection URL. This is where your mongodb server is running.
+  var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
+
+  // Use connect method to connect to the Server
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      //HURRAY!! We are connected. :)
+      console.log('Connection established to', url);
+
+      // do some work here with the database.
+      var collection = db.collection('images');  
+      collection.aggregate({
+          "$unwind": "$faces"
+      }, {
+          "$group": {
+              "_id": null,
+              "avg": {
+                  "$avg": "$faces.age"
+              }
+          }
+      }, function(err, result) {
+        if (err) {
+          cb(err);
+        } else {
+          cb(null, result);
+        }
+        db.close();
+      });
+    }
+  })
+}
+
+

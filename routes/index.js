@@ -41,8 +41,6 @@ router.post('/image', function(req, res) {
 
         var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
         var tags = image.Body ? image.Body.split(' ') : ['notag'];
-        console.log(image);
-        console.log('tags: ' + tags);
 
         imageDetails = {
             image: 'https://s3.amazonaws.com/disruptny/' + imageName,
@@ -102,8 +100,14 @@ router.post('/image', function(req, res) {
                 if (faceDetails) {
                     imageDetails.faces = _.pluck(JSON.parse(faceDetails), 'attributes');
                 }
-                db.insertImage(imageDetails);
-                callback(null);
+                db.insertImage(imageDetails, function(err, result){
+                    if (err) {
+                        callback(err);
+                    } else {
+                        console.log(result);
+                        callback(null, result);
+                    }
+                });
             }]
         }, function(err, results) {
             res.send();
@@ -114,10 +118,14 @@ router.post('/image', function(req, res) {
     }
 });
 
-/* Get images */
-router.get('/image', function(req, res) {
-
+router.get('/averageAge', function(req, res) {
+    db.getAverageAge(function(err, result) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json(result);
+        }
+    });
 });
-
 
 module.exports = router;
