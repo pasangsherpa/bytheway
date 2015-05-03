@@ -101,4 +101,76 @@ exports.getAverageAge = function getAverageAge(cb) {
   })
 }
 
+exports.getMaxAge = function getMaxAge(cb) {
+  var MongoClient = mongodb.MongoClient;
+  // Connection URL. This is where your mongodb server is running.
+  var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
+
+  // Use connect method to connect to the Server
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      //HURRAY!! We are connected. :)
+      console.log('Connection established to', url);
+
+      // do some work here with the database.
+      var collection = db.collection('images');  
+      collection.aggregate({
+          "$unwind": "$faces"
+      }, {
+          "$group": {
+              "_id": null,
+              "max": {
+                  "$max": "$faces.age"
+              }
+          }
+      }, function(err, result) {
+        if (err) {
+          cb(err);
+        } else {
+          cb(null, result);
+        }
+        db.close();
+      });
+    }
+  })
+}
+
+exports.getMinAge = function getMinAge(cb) {
+  var MongoClient = mongodb.MongoClient;
+  // Connection URL. This is where your mongodb server is running.
+  var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
+
+  // Use connect method to connect to the Server
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      //HURRAY!! We are connected. :)
+      console.log('Connection established to', url);
+
+      // do some work here with the database.
+      var collection = db.collection('images');  
+      collection.aggregate({
+          "$unwind": "$faces"
+      }, {
+          "$group": {
+              "_id": null,
+              "max": {
+                  "$min": "$faces.age"
+              }
+          }
+      }, function(err, result) {
+        if (err) {
+          cb(err);
+        } else {
+          cb(null, result);
+        }
+        db.close();
+      });
+    }
+  })
+}
+
 

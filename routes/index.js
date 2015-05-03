@@ -128,4 +128,24 @@ router.get('/averageAge', function(req, res) {
     });
 });
 
+router.get('/maxAge', function(req, res) {
+    db.getMaxAge(function(err, result) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+router.get('/minAge', function(req, res) {
+    db.getMinAge(function(err, result) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
 module.exports = router;
