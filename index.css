@@ -67,3 +67,7 @@ body {
 form {
   margin-top: 10px !important;
 }
+
+.jumbotron {
+  padding-top: 0px !important;
+}
