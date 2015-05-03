@@ -124,6 +124,9 @@ exports.getStats = function getStats(cb) {
               "minimumAge": {
                   "$min": "$faces.age"
               },
+              "total": {
+                  "$sum": 1
+              },
               "totalMale": {
                   "$sum": {
                     "$cond": [{
@@ -137,9 +140,6 @@ exports.getStats = function getStats(cb) {
                         "$eq": ["$faces.gender", "female"]
                     }, 1, 0]
                   }                
-              },
-              "total": {
-                  '$add': ['$totalMale', '$totalFemale']
               }
           }
       }, function(err, result) {
