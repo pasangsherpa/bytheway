@@ -11,7 +11,7 @@ $search.on('click', function() {
   var tags = $('#search-bar').val();
   $.getJSON("http://localhost:3000/images?tags=" + tags)
   .done(function( data ) {
-    $.each( data.items, function( i, item ) {
+    $.each(data, function( i, item ) {
       $("<img>").attr( "src", item.image ).appendTo("#tag-results");
     });
   });
