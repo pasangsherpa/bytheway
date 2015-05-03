@@ -18,6 +18,10 @@ $search.on('click', function() {
   $('#tag-results').css("display", "");
 })
 
+function getRenderSpeed() {
+  return Math.max(1000, 3000 - imageQueue.length/2 * 500);
+}
+
 // Get initial image set
 // Start listening for images.
 // start timer to render images.
@@ -32,7 +36,7 @@ ws.onmessage = function (event) {
 
 firstImageLoad();
 // setTimeout(pollTimer, 5000);
-setTimeout(insertTimer, 5000);
+setTimeout(insertTimer, getRenderSpeed());
 
 // TODO: Use real URL and schema
 function firstImageLoad() {
@@ -129,11 +133,11 @@ function insertTimer() {
     var lastImageSrc = popLastPhoto();
     imageQueue.push(lastImageSrc);
     ee.emit('insertImage');
-    setTimeout(insertTimer,5000);
+    setTimeout(insertTimer,getRenderSpeed());
     // grab some photos from the end and insert them
   } else {
     ee.emit('insertImage');
-    setTimeout(insertTimer,5000);
+    setTimeout(insertTimer,getRenderSpeed());
   }
 }
 
