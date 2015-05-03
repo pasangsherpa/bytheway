@@ -10,6 +10,7 @@ var gm = require('gm').subClass({
     imageMagick: true
 });
 var mime = require('mime');
+var db = require('../mongodb');
 
 router.get('/s3upload', function(req, res, next) {
     uploadFile.sendToS3();
@@ -21,44 +22,58 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
+/* Twilio incoming */
 router.post('/image', function(req, res) {
     // Validate Twilio req
-    // if (twilio.validateExpressRequest(req, config.authToken)) {
+    if (twilio.validateExpressRequest(req, process.env.TWILIO_TOKEN)) {
+        var image = req.body;
+        if (!image.MediaUrl0) {
+            return res.send('No image found.');
+        }
 
-    var image = req.body;
-    console.log(req.body);
+        var imageName = image.From.replace('+', '') + '/' + image.SmsMessageSid + '.jpg';
+        var tags = image.Body ? image.Body.split(' ') : ['notag'];
+        console.log(image);
+        console.log('tags: ' + tags);
 
-    var imageName = image.From + '/' + image.SmsMessageSid + '.jpg';
-
-    gm(request(image.MediaUrl0), imageName)
-        .resize(null, 500)
-        .compress('Lossless')
-        .noProfile()
-        .stream(function(err, stdout, stderr) {
-            if (err) console.log(err);
-            var buf = new Buffer('');
-            stdout.on('data', function(data) {
-                buf = Buffer.concat([buf, data]);
-            });
-            stdout.on('end', function() {
-                var data = {
-                    Bucket: 'disruptny',
-                    Key: imageName,
-                    Body: buf,
-                    ACL: 'public-read',
-                    ContentType: mime.lookup(imageName)
-                };
-                S3.putObject(data, function(err, response) {
-                    if (err) console.log(err);
-                    console.log('imageName: ' + imageName);
-                    res.status(200).send('OK');
+        gm(request(image.MediaUrl0), imageName)
+            .resize(null, 500)
+            .compress('Lossless')
+            .noProfile()
+            .stream(function(err, stdout, stderr) {
+                if (err) console.log(err);
+                var buf = new Buffer('');
+                stdout.on('data', function(data) {
+                    buf = Buffer.concat([buf, data]);
+                });
+                stdout.on('end', function() {
+                    var data = {
+                        Bucket: 'disruptny',
+                        Key: imageName,
+                        Body: buf,
+                        ACL: 'public-read',
+                        ContentType: mime.lookup(imageName)
+                    };
+                    S3.putObject(data, function(err, response) {
+                        if (err) console.log(err);
+                        db.insertImage({
+                            image: 'https://s3.amazonaws.com/disruptny/' + imageName,
+                            phoneNumber: image.From,
+                            tags: tags
+                        });
+                        res.status(200).send('OK');
+                    });
                 });
             });
-        });
-
-    // } else {
-    //   return res.send('Nice try imposter.');
-    // }
+    } else {
+        return res.send('Nice try imposter.');
+    }
 });
+
+/* Get images */
+router.get('/image', function(req, res) {
+
+});
+
 
 module.exports = router;
