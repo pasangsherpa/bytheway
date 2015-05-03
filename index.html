@@ -9,13 +9,15 @@
 
   </head>
   <body>
-    <form class="navbar-form navbar-left" role="search" onclick="return false">
-      <div class="form-group">
-        <input type="text" id="search-bar" class="form-control" placeholder="Search" value="">
-      </div>
-      <button type="submit" id="search-button" class="btn btn-default">Submit</button>
-    </form>
-    <div id="tag-results"></div>
+    <div id="search-div">
+      <form class="navbar-form navbar-left" role="search" onclick="return false">
+        <div class="form-group">
+          <input type="text" id="search-bar" class="form-control" placeholder="Tag" value="">
+        </div>
+        <button type="submit" id="search-button" class="btn btn-default">Search</button>
+      </form>
+      <div id="tag-results"></div>
+    </div>
     <div id="stats-div">
       <a href="" id="stats-button" class="btn btn-default toggle">Hide Stats</a>
       <div id="stats">
@@ -60,7 +62,6 @@
         </div>
       </div>
     </div>
-    <div>
     <div class="jumbotron" id="container">
       <header>
         <h1>By the way...</h1>

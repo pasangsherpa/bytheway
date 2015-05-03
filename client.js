@@ -12,9 +12,10 @@ $search.on('click', function() {
   $.getJSON("http://localhost:3000/images?tags=" + tags)
   .done(function( data ) {
     $.each(data, function( i, item ) {
-      $("<img>").attr( "src", item.image ).appendTo("#tag-results");
+      $("<img>").addClass("tag-image").attr( "src", item.image ).appendTo("#tag-results");
     });
   });
+  $('#tag-results').css("display", "");
 })
 
 // Get initial image set
