@@ -36,8 +36,9 @@ function setStats() {
   $.getJSON("http://localhost:3000/stats")
   .then(function(results) {
     var stats = results[0];
-    var boys = Math.round((stats.totalMale / stats.total) * 100);
-    var girls = Math.round((stats.totalFemale / stats.total) * 100);
+    var total = stats.totalMale + stats.totalFemale;
+    var boys = Math.round((stats.totalMale / total) * 100);
+    var girls = Math.round((stats.totalFemale / total) * 100);
     var avgAge = Math.round(stats.averageAge * 10) / 10;
     $('#boys-progress').html(boys + "%");
     $('#boys-progress').css("width", boys + "%");
@@ -69,6 +70,7 @@ $('#stats-button').click(function(evt) {
 // }
 
 function insertImage(url) {
+  setStats();
   var tmpImage = $("<img/>");
   tmpImage.load(function() {
     var naturalWidth = tmpImage[0].naturalWidth;
