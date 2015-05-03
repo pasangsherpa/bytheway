@@ -63,7 +63,7 @@ router.post('/image', function(req, res) {
                         analyzesAge: true,
                         analyzesGender: true
                     },
-                    body: '{"url":"' + imageDetails.image + '"}'        
+                    body: '{"url":"' + image.MediaUrl0 + '"}'        
                 }, function(err, response, body) {
                     if (err) return callback(err);
                     else {
