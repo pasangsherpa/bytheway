@@ -1,15 +1,30 @@
+var ee = new EventEmitter();
+ee.addListener('insertImage', insertImageListener);
 
 var $container = $("#photobanner");
-
 var imageQueue = [
   "http://lorempixel.com/344/233/cats/10/",
   "http://lorempixel.com/344/233/cats/1/",
   "http://lorempixel.com/344/233/cats/2/"
 ];
 
-// 1. insert blank div with height 0 above the rest
-// 2. grow its height to the height of the new image
-// 3. fade in the image
+setTimeout(insertTimer, 5000);
+setTimeout(pollTimer, 5000);
+
+// TODO: Use real URL and schema
+function pollForImages() {
+  $.getJSON('someURLhere')
+  .then(function(results) {
+    results.forEach(function(result) {
+      imageQueue.push(result.url);
+    });
+  });
+}
+
+function pollTimer() {
+  pollForImages();
+  setTimeout(pollTimer, 5000);
+}
 
 function insertImage(url) {
   var $newImageContainer = $('<div class="item" style="height:0px; border:1px solid black; width:344px"></div>');
@@ -22,17 +37,6 @@ function insertImage(url) {
 
 }
 
-// while (imageQueue.length > 1) {
-//   var next = imageQueue.pop();
-//   (function() {
-//     setTimeout(function() {
-//       insertImage(next);
-//     }, 2000);
-//   })();
-
-// }
-
-var ee = new EventEmitter();
 
 function insertImageListener() {
   console.log('The insertImage event has been emitted.');
@@ -42,6 +46,10 @@ function insertImageListener() {
 
 function insertTimer() {
   if (isQueueEmpty()) {
+    var lastImageSrc = popLastPhoto();
+    imageQueue.push(lastImageSrc);
+    ee.emit('insertImage');
+    setTimeout(insertTimer,5000);
     // grab some photos from the end and insert them
   } else {
     ee.emit('insertImage');
@@ -49,17 +57,16 @@ function insertTimer() {
   }
 }
 
-setTimeout(insertTimer, 5000);
 
-ee.addListener('insertImage', insertImageListener);
 
 function isQueueEmpty() {return imageQueue.length === 0}
 
 function popLastPhoto() {
   var items = $(".item");
   var last = items[items.length - 1];
-
   var src = $(last).children()[0].src;
+  $(last).remove();
+  return src;
 }
 
 
