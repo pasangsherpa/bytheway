@@ -12,7 +12,6 @@ var host = window.document.location.host.replace(/:.*/, '');
 var ws = new WebSocket('ws://' + host + ':3030');
 ws.onmessage = function (event) {
   console.log(event);
-  // console.log(JSON.parse(event.data));
   imageQueue.push(event.data);
 };
 
@@ -51,7 +50,6 @@ function insertImage(url) {
 }
 
 function insertImageListener() {
-  console.log('The insertImage event has been emitted.');
   var next = imageQueue.pop();
   insertImage(next);
 }

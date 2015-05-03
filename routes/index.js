@@ -21,7 +21,9 @@ var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({port: 3030});
 wss.on('connection', function(ws) {
+    console.log('connection established with client');
   eventEmitter.on('sendImage', function(imageObj) {
+    console.log('sendImage Event called. Sending', imageObj);
     ws.send(imageObj.image);
  
   });
@@ -62,7 +64,7 @@ router.get('/images', function(req, res) {
 /* Twilio incoming */
 router.post('/image', function(req, res) {
     // Validate Twilio req
-    if (twilio.validateExpressRequest(req, process.env.TWILIO_TOKEN)) {
+    // if (twilio.validateExpressRequest(req, process.env.TWILIO_TOKEN)) {
         var image = req.body;
         if (!image.MediaUrl0) {
             return res.send('No image found.');
@@ -76,6 +78,7 @@ router.post('/image', function(req, res) {
             phoneNumber: image.From,
             tags: tags
         }
+        eventEmitter.emit('sendImage', imageDetails);
 
         async.auto({
             getFaceDetails: function(callback){
@@ -133,7 +136,6 @@ router.post('/image', function(req, res) {
                     if (err) {
                         callback(err);
                     } else {
-                        eventEmitter.emit('sendImage', imageDetails);
                         callback(null, result);
                     }
                 });
@@ -142,9 +144,9 @@ router.post('/image', function(req, res) {
             res.send();
         });
 
-    } else {
-        return res.send('Nice try imposter.');
-    }
+    // } else {
+    //     return res.send('Nice try imposter.');
+    // }
 });
 
 router.get('/stats', function(req, res) {
