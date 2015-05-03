@@ -159,4 +159,14 @@ router.get('/stats', function(req, res) {
     });
 });
 
+router.get('/tagStats', function(req, res) {
+    db.getTagsStats(function(err, result) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
 module.exports = router;

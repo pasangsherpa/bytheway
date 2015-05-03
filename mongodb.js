@@ -95,6 +95,46 @@ exports.getImagesWithTag = function getImages(tagsList, cb) {
   });
 }
 
+exports.getTagsStats = function getTagsStats(cb) {
+  var MongoClient = mongodb.MongoClient;
+  // Connection URL. This is where your mongodb server is running.
+  var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
+
+  // Use connect method to connect to the Server
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      //HURRAY!! We are connected. :)
+      console.log('Connection established to', url);
+
+      // do some work here with the database.
+      var collection = db.collection('images');  
+      collection.aggregate({
+          "$unwind": "$tags"
+      }, {
+          "$group": {
+              "_id": "$tags",
+              "count": {
+                  "$sum": 1
+              }
+          }, {
+              "$sort": {
+                  "count": -1
+              }
+          }
+      }, function(err, result) {
+        if (err) {
+          cb(err);
+        } else {
+          cb(null, result);
+        }
+        db.close();
+      });
+    }
+  });
+}
+
 exports.getStats = function getStats(cb) {
   var MongoClient = mongodb.MongoClient;
   // Connection URL. This is where your mongodb server is running.
