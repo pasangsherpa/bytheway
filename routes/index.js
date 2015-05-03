@@ -85,7 +85,6 @@ router.post('/image', function(req, res) {
             phoneNumber: image.From,
             tags: tags
         }
-        eventEmitter.emit('sendImage', imageDetails);
 
         async.auto({
             getFaceDetails: function(callback){
@@ -129,7 +128,10 @@ router.post('/image', function(req, res) {
                             };
                             S3.putObject(data, function(err, response) {
                                 if (err) return callback(err);
-                                else callback(null);
+                                else {
+                                    emitSendImageEvent();
+                                    callback(null); 
+                                }
                             });
                         });
                     });
@@ -155,6 +157,10 @@ router.post('/image', function(req, res) {
     //     return res.send('Nice try imposter.');
     // }
 });
+
+function emitSendImageEvent() {
+    eventEmitter.emit('sendImage', imageDetails);
+}   
 
 router.get('/stats', function(req, res) {
     db.getStats(function(err, result) {
