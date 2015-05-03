@@ -8,6 +8,14 @@ var imageQueue = [];
 // Start listening for images.
 // start timer to render images.
 
+var host = window.document.location.host.replace(/:.*/, '');
+var ws = new WebSocket('ws://' + host + ':3030');
+ws.onmessage = function (event) {
+  console.log(event);
+  // console.log(JSON.parse(event.data));
+  imageQueue.push(event.data);
+};
+
 
 firstImageLoad();
 // setTimeout(pollTimer, 5000);
