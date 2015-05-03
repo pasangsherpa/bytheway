@@ -64,7 +64,7 @@ exports.getImages = function getImages(cb) {
   });
 }
 
-exports.getImagesWithTag = function getImages(tag, cb) {
+exports.getImagesWithTag = function getImages(tagsList, cb) {
   var MongoClient = mongodb.MongoClient;
   // Connection URL. This is where your mongodb server is running.
   var url = 'mongodb://'+process.env.MONGOLABUSER+':'+process.env.MONGOLABPASSWORD+'@ds031822.mongolab.com:31822/bytheway';
@@ -79,7 +79,13 @@ exports.getImagesWithTag = function getImages(tag, cb) {
 
       // do some work here with the database.
       var collection = db.collection('images');
-      collection.find({ tags: { $in: [tag] } }, function(err, results){
+      collection.find({
+          tags: {
+              $all: [
+                  tagsList
+              ]
+          }
+      }, function(err, results){
         if (err) {
           cb(err);
         } else {
