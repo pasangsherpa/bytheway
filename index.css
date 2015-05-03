@@ -27,6 +27,7 @@ h1 {
 
 body {
   font-size: x-large !important;
+  overflow: hidden;
 }
 
 .badge {
