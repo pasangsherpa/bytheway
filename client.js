@@ -1,8 +1,18 @@
 var ee = new EventEmitter();
 ee.addListener('insertImage', insertImageListener);
 
+var $search = $('#search-button');
 var $container = $("#photobanner");
 var imageQueue = [];
+
+$search.on('click', function() {
+  var tags = $('#search-bar').val();
+  $.getJSON("http://localhost:3000/images?tags=" + tags)
+  .then(function(results) {
+    debugger
+    console.log(results);
+  });
+})
 
 // Get initial image set
 // Start listening for images.
