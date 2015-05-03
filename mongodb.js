@@ -97,8 +97,8 @@ exports.getStats = function getStats(cb) {
                             "$eq": [
                                 "$faces.gender",
                                 "male"
-                            ], 1, 0
-                        }
+                            ]}, 1, 0
+                        ]}
                     ]
                   }                
               },
@@ -108,8 +108,8 @@ exports.getStats = function getStats(cb) {
                             "$eq": [
                                 "$faces.gender",
                                 "female"
-                            ], 1, 0
-                        }
+                            ]}, 1, 0
+                        ]}
                     ]
                   }                
               }
