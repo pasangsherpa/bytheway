@@ -124,6 +124,9 @@ exports.getStats = function getStats(cb) {
               "minimumAge": {
                   "$min": "$faces.age"
               },
+              "total": {
+                  "$sum": "$_id"
+              },
               "totalMale": {
                   "$sum": {
                     "$cond": [{
