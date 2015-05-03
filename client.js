@@ -118,7 +118,9 @@ function insertImage(url) {
 
 function insertImageListener() {
   var next = imageQueue.pop();
-  insertImage(next);
+  setTimeout(function() {
+    insertImage(next);
+  }, 2000);
 }
 
 function insertTimer() {
