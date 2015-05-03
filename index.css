@@ -42,3 +42,7 @@ body {
   font-size: x-large !important;
   padding-top: 10px !important;
 }
+
+form {
+  margin-top: 10px !important;
+}
