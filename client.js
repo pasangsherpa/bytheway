@@ -31,6 +31,38 @@ function firstImageLoad() {
   });
 }
 
+// Set Stats
+function setStats() {
+  $.getJSON("http://localhost:3000/stats")
+  .then(function(results) {
+    var stats = results[0];
+    var boys = Math.round((stats.totalMale / stats.total) * 100);
+    var girls = Math.round((stats.totalFemale / stats.total) * 100);
+    var avgAge = Math.round(stats.averageAge * 10) / 10;
+    $('#boys-progress').html(boys + "%");
+    $('#boys-progress').css("width", boys + "%");
+    $('#girls-progress').html(girls + "%");
+    $('#girls-progress').css("width", girls + "%");
+    $('#average-age').html(avgAge);
+    $('#youngest').html(stats.minimumAge);
+    $('#oldest').html(stats.maximumAge);
+  });
+}
+
+$('#stats-button').click(function(evt) {
+  evt.preventDefault();
+  
+  var buttonText = $('#stats-button').html();
+  if (buttonText == "Show Stats") {
+    setStats();
+    $('#stats-button').html("Hide Stats");
+    $('#stats').fadeIn();
+  } else {
+    $('#stats-button').html("Show Stats");
+    $('#stats').fadeOut();
+  }
+});
+
 // function pollTimer() {
 //   pollForImages();
 //   // setTimeout(pollTimer, 5000);

@@ -11,32 +11,32 @@
   <body>
     <form class="navbar-form navbar-left" role="search">
       <div class="form-group">
-        <input type="text" id="search-bar" class="form-control" placeholder="Search">
+        <input type="text" id="search-bar" class="form-control" placeholder="Search" value="">
       </div>
-      <button type="button" id="search-button" class="btn btn-default">Submit</button>
+      <button type="submit" id="search-button" class="btn btn-default">Submit</button>
     </form>
     <div id="stats-div">
       <a href="" id="stats-button" class="btn btn-default toggle">Show Stats</a>
       <div id="stats">
         Boys: 
         <div class="progress">
-          <div class="progress-bar progress-bar-info" style="width: 80%">80%</div>
+          <div class="progress-bar progress-bar-info" id="boys-progress" style=""></div>
         </div>
         Girls: 
         <div class="progress">
-          <div class="progress-bar progress-bar-danger" style="width: 20%">20%</div>
+          <div class="progress-bar progress-bar-danger" id="girls-progress" style=""></div>
         </div>
         <ul class="list-group">
           <li class="list-group-item">
-            <span class="badge">32</span>
+            <span class="badge" id="average-age">32</span>
             Average Age
           </li>
           <li class="list-group-item">
-            <span class="badge">16</span>
+            <span class="badge" id="youngest">16</span>
             Youngest
           </li>
           <li class="list-group-item">
-            <span class="badge">65</span>
+            <span class="badge" id="oldest">65</span>
             Oldest
           </li>
         </ul>

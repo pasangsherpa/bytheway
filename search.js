@@ -1,7 +1,9 @@
 $('#search-button').click(function(evt) {
   evt.preventDefault();
   
-  var val = $('#search-bar').val();
-  console.log(val);
-  $('#search-bar').html('');
+  var val = $('#search-bar').html();
+  console.log(val + "worked");
+  $('#search-bar').html.clear;
+
+  return false;
 });
