@@ -85,6 +85,9 @@ exports.getStats = function getStats(cb) {
       }, {
           "$group": {
               "_id": null,
+              "averageAge": {
+                  "$avg": "$faces.age"
+              },
               "maximumAge": {
                   "$max": "$faces.age"
               },
