@@ -12,3 +12,8 @@
 h1 {
   text-align: center;
 }
+
+#stats-div {
+  margin: 10px;
+  float: right;
+}
