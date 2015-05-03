@@ -106,7 +106,8 @@ function insertImage(url) {
   var tmpImage = $("<img/>");
   tmpImage.load(function() {
     var naturalWidth = tmpImage[0].naturalWidth;
-    var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="height:0px; border:1px solid black; width:' + naturalWidth + 'px"></paper-shadow>');
+    var displayWidth = Math.min(naturalWidth, 600);
+    var $newImageContainer = $('<paper-shadow z="3" class="item span-shadow" style="overflow:hidden; height:0px; border:1px solid black; width:' + displayWidth + 'px"></paper-shadow>');
     $container.prepend($newImageContainer);
     $newImageContainer.animate({height: "500px"}, 500, function() {
       $newImageContainer.html(tmpImage);
